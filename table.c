@@ -1,7 +1,7 @@
 #include <math.h>
 #include <unistd.h>
 #include <stdio.h>
-// Code I used to generate the tables
+// Code I used to generate the tables. You don't need to use this to run the program.
 typedef struct RGBColor {
 	int r;
 	int g;
