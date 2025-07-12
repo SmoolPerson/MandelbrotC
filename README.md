@@ -7,3 +7,6 @@ https://en.wikipedia.org/wiki/Plotting_algorithms_for_the_Mandelbrot_set -- desc
 lodepng - Gave me an easy way to write image data to a PNG
 Pezzza's work (https://www.youtube.com/@PezzzasWork) -- I was inspired by the random approach he took to anti-aliasing
 3Blue1Brown -- For inspriing me to do this in the first place
+https://github.com/Inseckto/HSV-to-RGB/blob/master/HSV2RGB.c -- Gave me the C implementation I used to make the precomputed rgb taables
+
+:)
