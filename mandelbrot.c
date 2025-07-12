@@ -3,13 +3,14 @@
 #include <math.h>
 #include <time.h>
 #include "./lodepng.h"
+#include <stdbool.h>
 
 // precomputed rgb values with max saturation/brightness
 const int r_val[360] = {255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 250, 246, 242, 237, 233, 229, 225, 221, 216, 212, 208, 203, 199, 195, 191, 187, 182, 178, 174, 169, 165, 161, 157, 153, 148, 144, 140, 135, 131, 127, 123, 118, 114, 110, 106, 101, 97, 93, 89, 84, 80, 76, 72, 67, 63, 59, 55, 50, 46, 42, 38, 33, 29, 25, 21, 16, 12, 8, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 8, 12, 16, 21, 25, 29, 34, 38, 42, 46, 50, 55, 59, 63, 68, 72, 76, 80, 84, 89, 93, 97, 102, 106, 110, 114, 118, 123, 127, 131, 136, 140, 144, 148, 152, 157, 161, 165, 170, 174, 178, 182, 186, 191, 195, 199, 204, 208, 212, 216, 220, 225, 229, 233, 238, 242, 246, 250, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255};
 const int g_val[360] = {0, 4, 8, 12, 16, 21, 25, 29, 33, 38, 42, 46, 51, 55, 59, 63, 67, 72, 76, 80, 85, 89, 93, 97, 102, 106, 110, 114, 119, 123, 127, 131, 136, 140, 144, 148, 153, 157, 161, 165, 170, 174, 178, 182, 187, 191, 195, 199, 204, 208, 212, 216, 221, 225, 229, 233, 238, 242, 246, 250, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 250, 246, 242, 237, 233, 229, 225, 221, 216, 212, 208, 203, 199, 195, 191, 187, 182, 178, 174, 169, 165, 161, 157, 153, 148, 144, 140, 135, 131, 127, 123, 119, 114, 110, 106, 101, 97, 93, 89, 85, 80, 76, 72, 67, 63, 59, 55, 51, 46, 42, 38, 33, 29, 25, 21, 17, 12, 8, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 const int b_val[360] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 8, 12, 17, 21, 25, 29, 34, 38, 42, 46, 51, 55, 59, 63, 68, 72, 76, 80, 85, 89, 93, 97, 102, 106, 110, 114, 119, 123, 127, 131, 136, 140, 144, 148, 153, 157, 161, 165, 170, 174, 178, 182, 187, 191, 195, 199, 204, 208, 212, 216, 221, 225, 229, 233, 238, 242, 246, 250, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 250, 246, 242, 237, 233, 229, 225, 221, 216, 212, 208, 203, 199, 195, 191, 187, 182, 178, 174, 169, 165, 161, 157, 153, 148, 144, 140, 135, 131, 127, 123, 119, 114, 110, 106, 101, 97, 93, 89, 85, 80, 76, 72, 67, 63, 59, 55, 51, 46, 42, 38, 33, 29, 25, 21, 17, 12, 8, 4};
 
-int ANTI_ALIASING = 1;
+bool ANTI_ALIASING = true;
 // number of points to choose while doing anti aliasing
 int ANTI_ALIASING_NUM_PTS = 12;
 double COLOR_STEP_MULTIPLIER = 0.5;
@@ -146,11 +147,81 @@ void get_and_set_pixel_color(int imagex, int imagey, unsigned char *rgb_data) {
     }
 }
 
+void parse_args(int argc, char *argv[]) {
+    if (argc == 1) {
+        fprintf(stderr, "No arguments provided.\n");
+        fprintf(stderr, "Use --help for usage information.\n");
+        exit(1);
+    }
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
+            printf("Mandelbrot Set Generator\n");
+            printf("Usage: %s [options]\n\n", argv[0]);
+            printf("Options:\n");
+            printf("  --default               Run with the default options hardcoded");
+            printf("  --width-min <float>     Left boundary (default: -2.0)\n");
+            printf("  --width-max <float>     Right boundary (default: 0.5)\n");
+            printf("  --height-min <float>    Bottom boundary (default: -1.0)\n");
+            printf("  --height-max <float>    Top boundary (default: 1.0)\n");
+            printf("  --pixels <int>          Pixels per unit (default: 4096)\n");
+            printf("  --iterations <int>      Max iterations (default: 675)\n");
+            printf("  --output <filename>     Output filename (default: mandelbrot.png)\n");
+            printf("  --anti-aliasing <0|1>   Enable anti-aliasing (default: false)\n");
+            printf("  --aa-points <int>       Anti-aliasing sample points (default: 12)\n");
+            printf("  --color-mult <float>    Color step multiplier (default: 0.5)\n");
+            printf("  --color-offset <int>    Color offset (default: 240)\n");
+            printf("  --help, -h             Show this help message\n");
+            exit(0);
+        }
+        else if (strcmp(argv[i], "--default") == 0 && i + 1 < argc) {
+            break;
+        }
+        else if (strcmp(argv[i], "--width-min") == 0 && i + 1 < argc) {
+            width_min = atof(argv[++i]);
+        }
+        else if (strcmp(argv[i], "--width-max") == 0 && i + 1 < argc) {
+            width_max = atof(argv[++i]);
+        }
+        else if (strcmp(argv[i], "--height-min") == 0 && i + 1 < argc) {
+            height_min = atof(argv[++i]);
+        }
+        else if (strcmp(argv[i], "--height-max") == 0 && i + 1 < argc) {
+            height_max = atof(argv[++i]);
+        }
+        else if (strcmp(argv[i], "--pixels") == 0 && i + 1 < argc) {
+            PIXELS_PER_SQUARE = atoi(argv[++i]);
+        }
+        else if (strcmp(argv[i], "--iterations") == 0 && i + 1 < argc) {
+            MAX_ITER = atoi(argv[++i]);
+        }
+        else if (strcmp(argv[i], "--output") == 0 && i + 1 < argc) {
+            OUTPUT_FILENAME = argv[++i];
+        }
+        else if (strcmp(argv[i], "--anti-aliasing") == 0 && i + 1 < argc) {
+            ANTI_ALIASING = atoi(argv[++i]);
+        }
+        else if (strcmp(argv[i], "--aa-points") == 0 && i + 1 < argc) {
+            ANTI_ALIASING_NUM_PTS = atoi(argv[++i]);
+        }
+        else if (strcmp(argv[i], "--color-mult") == 0 && i + 1 < argc) {
+            COLOR_STEP_MULTIPLIER = atof(argv[++i]);
+        }
+        else if (strcmp(argv[i], "--color-offset") == 0 && i + 1 < argc) {
+            COLOR_OFFSET = atoi(argv[++i]);
+        }
+        else {
+            fprintf(stderr, "Unknown option: %s\n", argv[i]);
+            fprintf(stderr, "Use --help for usage information\n");
+            exit(1);
+        }
+    }
+}
+
 // I'm just using this function for various tasks, i should maybe split it up more
-int main() {
+int main(int argc, char *argv[]) {
     // Seed rng gen
     srand(time(NULL));
-
+    parse_args(argc,  argv);
     // get the difference between max and min to get the mathematical length, then multiply by the pixel rate to get the real size
     // typecast to int since img dim needs to be whole number
     WIDTH = (int)(fabs(width_max - width_min) * PIXELS_PER_SQUARE);
