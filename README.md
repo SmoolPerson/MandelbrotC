@@ -4,7 +4,7 @@ CLI usage and GPU support planned.
 
 Usage:
 
-Linux and macOS: run ./compile.sh and make sure lodepng.c and lodepng.h are in the same dir. Then run the executable that shows up with --help for usage info.
+Linux and macOS: run ./run.sh and make sure lodepng.c and lodepng.h are in the same dir. Then run the executable that shows up with --help for usage info.
 
 Windows: I don't have a windows machine to test, but compiling should be the same (?) and just run the .exe file that shows up.
 
