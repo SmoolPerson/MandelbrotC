@@ -1,7 +1,7 @@
 #include <math.h>
 #include <unistd.h>
 #include <stdio.h>
-
+// Code I used to generate the tables
 typedef struct RGBColor {
 	int r;
 	int g;
