@@ -147,34 +147,30 @@ void get_and_set_pixel_color(int imagex, int imagey, unsigned char *rgb_data) {
     }
 }
 
+void print_help() {
+    printf("Mandelbrot Set Generator\n");
+    printf("Usage: ./mandelbrot [options]\n\n");
+    printf("Options:\n");
+    printf("  --width-min <float>     Left boundary (default: -2.0)\n");
+    printf("  --width-max <float>     Right boundary (default: 0.5)\n");
+    printf("  --height-min <float>    Bottom boundary (default: -1.0)\n");
+    printf("  --height-max <float>    Top boundary (default: 1.0)\n");
+    printf("  --pixels <int>          Pixels per unit (default: 4096)\n");
+    printf("  --iterations <int>      Max iterations (default: 675)\n");
+    printf("  --output <filename>     Output filename (default: mandelbrot.png)\n");
+    printf("  --anti-aliasing <0|1>   Enable anti-aliasing (default: false)\n");
+    printf("  --aa-points <int>       Anti-aliasing sample points (default: 12)\n");
+    printf("  --color-mult <float>    Color step multiplier (default: 0.5)\n");
+    printf("  --color-offset <int>    Color offset (default: 240)\n");
+    printf("  --help, -h              Show this help message\n");
+    exit(0);
+}
+
 void parse_args(int argc, char *argv[]) {
-    if (argc == 1) {
-        fprintf(stderr, "No arguments provided.\n");
-        fprintf(stderr, "Use --help for usage information.\n");
-        exit(1);
-    }
     for (int i = 1; i < argc; i++) {
+        puts(argv[i]);
         if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
-            printf("Mandelbrot Set Generator\n");
-            printf("Usage: %s [options]\n\n", argv[0]);
-            printf("Options:\n");
-            printf("  --default               Run with the default options hardcoded");
-            printf("  --width-min <float>     Left boundary (default: -2.0)\n");
-            printf("  --width-max <float>     Right boundary (default: 0.5)\n");
-            printf("  --height-min <float>    Bottom boundary (default: -1.0)\n");
-            printf("  --height-max <float>    Top boundary (default: 1.0)\n");
-            printf("  --pixels <int>          Pixels per unit (default: 4096)\n");
-            printf("  --iterations <int>      Max iterations (default: 675)\n");
-            printf("  --output <filename>     Output filename (default: mandelbrot.png)\n");
-            printf("  --anti-aliasing <0|1>   Enable anti-aliasing (default: false)\n");
-            printf("  --aa-points <int>       Anti-aliasing sample points (default: 12)\n");
-            printf("  --color-mult <float>    Color step multiplier (default: 0.5)\n");
-            printf("  --color-offset <int>    Color offset (default: 240)\n");
-            printf("  --help, -h             Show this help message\n");
-            exit(0);
-        }
-        else if (strcmp(argv[i], "--default") == 0 && i + 1 < argc) {
-            break;
+            print_help();
         }
         else if (strcmp(argv[i], "--width-min") == 0 && i + 1 < argc) {
             width_min = atof(argv[++i]);
@@ -219,6 +215,7 @@ void parse_args(int argc, char *argv[]) {
 
 // I'm just using this function for various tasks, i should maybe split it up more
 int main(int argc, char *argv[]) {
+    puts("Welcome to Mandelbrot! Use the argument -h or --help for usage. If you run it with no arguments it will run with the default ones!");
     // Seed rng gen
     srand(time(NULL));
     parse_args(argc,  argv);
@@ -238,7 +235,7 @@ int main(int argc, char *argv[]) {
         // print progress bar
         percent = (x * 100) / WIDTH;
         if (percent > past_percent) {
-            printf("\r %d percent done", percent);
+            printf("\r%d percent done generating set", percent);
             fflush(stdout);
             past_percent = percent;
         }
