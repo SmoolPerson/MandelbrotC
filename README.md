@@ -2,6 +2,7 @@
 A mandelbrot image generator in less than 200 lines of C code. Supports features like anti-aliasing and color smoothing. The images mandelbrot.png and seahorse.png were rendered using this program. CLI usage and GPU support planned.
 Usage:
 Linux and macOS: run ./run.sh and make sure lodepng.c and lodepng.h are in the same dir. Customize the constants at the top of the C file.
+
 Windows: I don't have a windows machine to test, but compiling should be the same (?) and just run the .exe file that shows up.
 
 # Credits
